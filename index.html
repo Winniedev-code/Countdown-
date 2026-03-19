@@ -8,11 +8,11 @@
     body {
       margin: 0;
       padding: 0;
-      background: #800080; /* Purple background */
+      background: #E6E6FA; /* Lavender background */
       font-family: 'Arial', sans-serif;
       overflow: hidden;
-      color: #fff;
       text-align: center;
+      color: #4B0082;
     }
 
     h1 {
@@ -34,6 +34,8 @@
     /* Heart style */
     .heart {
       position: absolute;
+      width: 20px;
+      height: 20px;
       transform: rotate(-45deg);
       animation-name: float;
       animation-timing-function: linear;
@@ -44,17 +46,20 @@
     .heart::after {
       content: '';
       position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: inherit;
       border-radius: 50%;
     }
 
     .heart::before {
-      top: -50%;
+      top: -10px;
       left: 0;
     }
 
     .heart::after {
       top: 0;
-      left: 50%;
+      left: 10px;
     }
 
     @keyframes float {
@@ -75,9 +80,9 @@
   <div class="countdown" id="countdown"></div>
 
   <script>
-    // Set your anniversary date here in YYYY-MM-DD format
-const anniversaryDate = new Date("2026-03-21T00:00:00"); // 21 March 2026
+    // Real-time countdown to March 21
     const countdownEl = document.getElementById('countdown');
+    const anniversaryDate = new Date("2026-03-21T00:00:00"); // March 21, 2026
 
     function updateCountdown() {
       const now = new Date();
@@ -99,60 +104,33 @@ const anniversaryDate = new Date("2026-03-21T00:00:00"); // 21 March 2026
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // Random color for hearts
-    function randomColor() {
-      const colors = ['#FF69B4', '#FF1493', '#DB7093', '#BA55D3', '#9370DB', '#DA70D6'];
-      return colors[Math.floor(Math.random() * colors.length)];
-    }
+    // Floating hearts
+    const colors = ['#FF69B4', '#FF1493', '#DB7093', '#BA55D3', '#9370DB', '#DA70D6'];
 
     function createHeart() {
       const heart = document.createElement('div');
       heart.classList.add('heart');
 
-      const size = 10 + Math.random() * 30; // 10px to 40px
+      const size = 10 + Math.random() * 30; // random size 10-40px
       heart.style.width = size + 'px';
       heart.style.height = size + 'px';
-
       heart.style.left = Math.random() * window.innerWidth + 'px';
-      heart.style.background = randomColor();
-      heart.style.animationDuration = 3 + Math.random() * 4 + 's'; // 3s to 7s
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      heart.style.backgroundColor = color;
 
-      // Apply color to ::before and ::after
-      heart.style.setProperty('--before-color', heart.style.background);
-      heart.style.setProperty('--after-color', heart.style.background);
+      // Also set ::before and ::after to the same color
+      heart.style.setProperty('--color', color);
 
-      heart.style.borderRadius = '50%';
+      heart.style.animationDuration = 3 + Math.random() * 4 + 's'; // 3-7s
+      heart.style.zIndex = 1000;
 
-      heart.style.position = 'absolute';
-
-      heart.style.display = 'block';
-
-      heart.style.setProperty('background', heart.style.background);
-
-      heart.style.boxSizing = 'border-box';
-
-      heart.style.overflow = 'visible';
-
-      heart.style.setProperty('--color', heart.style.background);
-
-      // Create the pseudo elements using inline styles
-      heart.style.setProperty('--before-top', `-${size / 2}px`);
-      heart.style.setProperty('--before-left', `0px`);
-      heart.style.setProperty('--after-top', `0px`);
-      heart.style.setProperty('--after-left', `${size / 2}px`);
-
-      // Apply color via inline pseudo elements
-      heart.style.background = heart.style.background;
-      heart.style.setProperty('border-radius', '50%');
-
-      // Append to body
       document.body.appendChild(heart);
 
-      // Remove heart after animation
+      // Remove heart after animation ends
       setTimeout(() => heart.remove(), 8000);
     }
 
-    setInterval(createHeart, 250);
+    setInterval(createHeart, 200); // new heart every 0.2s
   </script>
 </body>
 </html>
