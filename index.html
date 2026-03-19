@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anniversary Countdown</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #800080; /* Purple background */
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+      color: #fff;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 50px;
+      font-size: 3em;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    .countdown {
+      font-size: 2.5em;
+      margin: 30px 0;
+    }
+
+    /* Heart style */
+    .heart {
+      position: absolute;
+      transform: rotate(-45deg);
+      animation-name: float;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -50%;
+      left: 0;
+    }
+
+    .heart::after {
+      top: 0;
+      left: 50%;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(-45deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-1200px) rotate(-45deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Happy Anniversary!</h1>
+  <p>Counting down to the special day we started our journey together. 💜</p>
+  <div class="countdown" id="countdown"></div>
+
+  <script>
+    // Set your anniversary date here (YYYY, MM-1, DD)
+    const anniversaryDate = new Date(2026, 7, 15, 0, 0, 0); // Example: 15 Aug 2026
+    const countdownEl = document.getElementById('countdown');
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = anniversaryDate - now;
+
+      if (diff <= 0) {
+        countdownEl.innerHTML = "🎉 Today is the special day! 🎉";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Random color for hearts
+    function randomColor() {
+      const colors = ['#FF69B4', '#FF1493', '#DB7093', '#BA55D3', '#9370DB', '#DA70D6'];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+
+      const size = 10 + Math.random() * 30; // 10px to 40px
+      heart.style.width = size + 'px';
+      heart.style.height = size + 'px';
+
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.background = randomColor();
+      heart.style.animationDuration = 3 + Math.random() * 4 + 's'; // 3s to 7s
+
+      // Apply color to ::before and ::after
+      heart.style.setProperty('--before-color', heart.style.background);
+      heart.style.setProperty('--after-color', heart.style.background);
+
+      heart.style.borderRadius = '50%';
+
+      heart.style.position = 'absolute';
+
+      heart.style.display = 'block';
+
+      heart.style.setProperty('background', heart.style.background);
+
+      heart.style.boxSizing = 'border-box';
+
+      heart.style.overflow = 'visible';
+
+      heart.style.setProperty('--color', heart.style.background);
+
+      // Create the pseudo elements using inline styles
+      heart.style.setProperty('--before-top', `-${size / 2}px`);
+      heart.style.setProperty('--before-left', `0px`);
+      heart.style.setProperty('--after-top', `0px`);
+      heart.style.setProperty('--after-left', `${size / 2}px`);
+
+      // Apply color via inline pseudo elements
+      heart.style.background = heart.style.background;
+      heart.style.setProperty('border-radius', '50%');
+
+      // Append to body
+      document.body.appendChild(heart);
+
+      // Remove heart after animation
+      setTimeout(() => heart.remove(), 8000);
+    }
+
+    setInterval(createHeart, 250);
+  </script>
+</body>
+</html>
