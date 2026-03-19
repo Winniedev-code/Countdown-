@@ -5,41 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Anniversary Countdown</title>
   <style>
-    body {
+    /* Global Styles */
+    body, html {
       margin: 0;
       padding: 0;
-      background: #E6E6FA; /* Lavender background */
+      height: 100%;
       font-family: 'Arial', sans-serif;
+      background-color: #E6E6FA; /* Soft lavender */
+      display: flex;
+      justify-content: center;
+      align-items: center;
       overflow: hidden;
+      color: #fff;
       text-align: center;
-      color: #4B0082;
     }
 
+    /* Container */
+    .container {
+      position: relative;
+      z-index: 1;
+      padding: 20px;
+    }
+
+    /* Headline */
     h1 {
-      margin-top: 50px;
-      font-size: 3em;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #fff;
+      text-shadow: 1px 1px 10px rgba(0,0,0,0.2);
     }
 
-    p {
-      font-size: 1.2em;
-      margin: 20px auto;
-      max-width: 600px;
-    }
-
+    /* Countdown Timer */
     .countdown {
-      font-size: 2.5em;
-      margin: 30px 0;
+      font-size: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
     }
 
-    /* Heart style */
+    .countdown div {
+      background: rgba(255,255,255,0.2);
+      padding: 15px 20px;
+      border-radius: 12px;
+      min-width: 80px;
+      transition: transform 0.3s;
+    }
+
+    .countdown div:hover {
+      transform: scale(1.1);
+    }
+
+    .countdown span {
+      display: block;
+      font-size: 1.2rem;
+      margin-top: 5px;
+      font-weight: bold;
+    }
+
+    /* Heart Styles */
     .heart {
       position: absolute;
       width: 20px;
       height: 20px;
+      background-color: #ff6b81;
       transform: rotate(-45deg);
-      animation-name: float;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
+      animation: floatUp linear infinite;
+      border-radius: 0 50% 50% 50%;
     }
 
     .heart::before,
@@ -48,7 +80,7 @@
       position: absolute;
       width: 20px;
       height: 20px;
-      background-color: inherit;
+      background-color: #ff6b81;
       border-radius: 50%;
     }
 
@@ -62,75 +94,88 @@
       left: 10px;
     }
 
-    @keyframes float {
+    @keyframes floatUp {
       0% {
         transform: translateY(0) rotate(-45deg);
         opacity: 1;
       }
       100% {
-        transform: translateY(-1200px) rotate(-45deg);
+        transform: translateY(-120vh) rotate(-45deg);
         opacity: 0;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      .countdown {
+        font-size: 1.5rem;
+      }
+    }
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+      .countdown {
+        flex-direction: column;
+        gap: 10px;
       }
     }
   </style>
 </head>
 <body>
-  <h1>Happy Anniversary!</h1>
-  <p>Counting down to the special day we started our journey together. 💜</p>
-  <div class="countdown" id="countdown"></div>
+
+  <div class="container">
+    <h1>Counting the Days Until Our Love Anniversary ❤️</h1>
+    <div class="countdown">
+      <div><span id="days">0</span>Days</div>
+      <div><span id="hours">0</span>Hours</div>
+      <div><span id="minutes">0</span>Minutes</div>
+      <div><span id="seconds">0</span>Seconds</div>
+    </div>
+  </div>
 
   <script>
-    // Real-time countdown to March 21
-    const countdownEl = document.getElementById('countdown');
-    const anniversaryDate = new Date("2026-03-21T00:00:00"); // March 21, 2026
+    // Countdown Function
+    const countdown = () => {
+      const anniversaryDate = new Date('March 21, 2026 00:00:00').getTime();
+      const now = new Date().getTime();
+      const distance = anniversaryDate - now;
 
-    function updateCountdown() {
-      const now = new Date();
-      const diff = anniversaryDate - now;
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      if (diff <= 0) {
-        countdownEl.innerHTML = "🎉 Today is the special day! 🎉";
-        return;
-      }
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-
-      countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      document.getElementById('days').innerText = days;
+      document.getElementById('hours').innerText = hours;
+      document.getElementById('minutes').innerText = minutes;
+      document.getElementById('seconds').innerText = seconds;
     }
 
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
+    setInterval(countdown, 1000);
+    countdown();
 
-    // Floating hearts
-    const colors = ['#FF69B4', '#FF1493', '#DB7093', '#BA55D3', '#9370DB', '#DA70D6'];
-
-    function createHeart() {
+    // Heart Animation
+    const createHearts = () => {
       const heart = document.createElement('div');
       heart.classList.add('heart');
-
-      const size = 10 + Math.random() * 30; // random size 10-40px
-      heart.style.width = size + 'px';
-      heart.style.height = size + 'px';
       heart.style.left = Math.random() * window.innerWidth + 'px';
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      heart.style.backgroundColor = color;
-
-      // Also set ::before and ::after to the same color
-      heart.style.setProperty('--color', color);
-
-      heart.style.animationDuration = 3 + Math.random() * 4 + 's'; // 3-7s
-      heart.style.zIndex = 1000;
+      heart.style.animationDuration = (5 + Math.random() * 5) + 's';
+      heart.style.opacity = Math.random();
+      heart.style.width = (10 + Math.random() * 20) + 'px';
+      heart.style.height = heart.style.width;
 
       document.body.appendChild(heart);
 
-      // Remove heart after animation ends
-      setTimeout(() => heart.remove(), 8000);
+      setTimeout(() => {
+        heart.remove();
+      }, 10000); // remove after animation ends
     }
 
-    setInterval(createHeart, 200); // new heart every 0.2s
+    setInterval(createHearts, 300);
   </script>
 </body>
 </html>
